@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 ARG VERSION
-FROM docker.io/library/alpine:3.21 AS builder
+FROM docker.io/library/alpine:3.22 AS builder
 ARG TARGETARCH
 RUN apk add --no-cache curl \
     && OP_VERSION="v$(curl https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N -s | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')"; \
