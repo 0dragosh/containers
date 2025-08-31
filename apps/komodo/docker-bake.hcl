@@ -2,7 +2,7 @@ target "docker-metadata-action" {}
 
 variable "VERSION" {
   // renovate: datasource=github-releases depName=moghtech/komodo versioning=loose
-  default = "1.19.0"
+  default = "1.19.1"
 }
 
 group "default" {
