@@ -3,14 +3,15 @@
 ARG VERSION
 FROM docker.io/library/alpine:3.23 AS builder
 ARG TARGETARCH
-RUN apk add --no-cache curl cargo pkgconfig openssl-dev \
+RUN apk add --no-cache curl cargo pkgconfig openssl-dev musl-dev \
+    && rustup target add x86_64-unknown-linux-musl \
     && OP_VERSION="v$(curl https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N -s | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')"; \
     curl -sSfo op.zip \
     https://cache.agilebits.com/dist/1P/op2/pkg/"$OP_VERSION"/op_linux_"$TARGETARCH"_"$OP_VERSION".zip \
     && unzip -o op.zip \
     && rm op.zip op.sig \
     && chmod +x op \
-    && cargo install fnox
+    && cargo install fnox --target x86_64-unknown-linux-musl
 
 FROM ghcr.io/moghtech/komodo-periphery:${VERSION}
 USER root
