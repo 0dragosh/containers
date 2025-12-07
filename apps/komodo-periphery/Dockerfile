@@ -3,7 +3,7 @@
 ARG VERSION
 FROM docker.io/library/alpine:3.23 AS builder
 ARG TARGETARCH
-RUN apk add --no-cache curl cargo \
+RUN apk add --no-cache curl cargo pkgconfig openssl-dev \
     && OP_VERSION="v$(curl https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N -s | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')"; \
     curl -sSfo op.zip \
     https://cache.agilebits.com/dist/1P/op2/pkg/"$OP_VERSION"/op_linux_"$TARGETARCH"_"$OP_VERSION".zip \
