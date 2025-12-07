@@ -3,7 +3,7 @@
 ARG VERSION
 FROM docker.io/library/alpine:3.23 AS builder
 ARG TARGETARCH
-RUN apk add --no-cache curl cargo pkgconfig openssl-dev musl-dev \
+RUN apk add --no-cache curl cargo pkgconfig openssl-dev musl-dev rust \
     && rustup target add x86_64-unknown-linux-musl \
     && OP_VERSION="v$(curl https://app-updates.agilebits.com/check/1/0/CLI2/en/2.0.0/N -s | grep -Eo '[0-9]+\.[0-9]+\.[0-9]+')"; \
     curl -sSfo op.zip \
