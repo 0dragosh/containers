@@ -1,11 +1,15 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/goss-org/goss/master/docs/schema.yaml
-process:
-  EmbyServer:
-    running: true
-port:
-  tcp6:8096:
-    listening: true
-http:
-  http://localhost:8096:
-    status: 200
+# yaml-language-server: $schema=https://raw.githubusercontent.com/GoogleContainerTools/container-structure-test/master/schema.json
+schemaVersion: "2.0.0"
+fileExistenceTests:
+  - name: 1Password CLI
+    path: /usr/local/bin/op
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 2000
+    gid: 2000
+commandTests:
+  - name: op version
+    command: op
+    args: ["--version"]
+    exitCode: 0
