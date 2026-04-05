@@ -13,6 +13,6 @@ RUN apk add --no-cache curl \
 
 FROM ghcr.io/moghtech/komodo-core:${VERSION}
 USER root
-RUN addgroup --system --gid 2000 komodo && adduser --system --uid 2000 --home /app --ingroup komodo komodo && chown -R 2000:2000 /app /config
+RUN addgroup --system --gid 2000 komodo && adduser --system --uid 2000 --home /app --ingroup komodo komodo && mkdir -p /config && chown -R 2000:2000 /app /config
 COPY --from=builder --chown=2000:2000 --chmod=755 /op /usr/local/bin/op
 USER 2000:2000
