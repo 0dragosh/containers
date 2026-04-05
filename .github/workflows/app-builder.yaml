@@ -113,10 +113,11 @@ jobs:
         id: bake
         with:
           files: |
-            ./docker-bake.hcl
+            ./apps/${{ inputs.app }}/docker-bake.hcl
             cwd://${{ runner.temp }}/docker-metadata-action-bake.json
           set: |
             *.args.VENDOR=${{ github.repository_owner }}
+            *.context=./apps/${{ inputs.app }}
             *.cache-from=${{ format('type=registry,ref=ghcr.io/{0}/build_cache:{1}-{2},mode=max', github.repository_owner, inputs.app, steps.target.outputs.arch) }}
             *.cache-to=${{ inputs.release && format('type=registry,ref=ghcr.io/{0}/build_cache:{1}-{2},mode=max,compression=zstd,force-compression=true', github.repository_owner, inputs.app, steps.target.outputs.arch) || '' }}
             *.labels.org.opencontainers.image.title=${{ inputs.app }}
@@ -127,9 +128,7 @@ jobs:
             ${{ inputs.release && format('*.output=type=image,name=ghcr.io/{0}/{1},push-by-digest=true,name-canonical=true,push=true', github.repository_owner, inputs.app) || '*.output=type=docker' }}
             *.platform=${{ matrix.platform }}
             *.tags=
-          source: .
           targets: image
-          workdir: ./apps/${{ inputs.app }}
 
       - if: ${{ ! inputs.release }}
         name: Run Application Tests
