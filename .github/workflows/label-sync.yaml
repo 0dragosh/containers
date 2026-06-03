@@ -29,7 +29,7 @@ jobs:
           private-key: ${{ secrets.BOT_APP_PRIVATE_KEY }}
 
       - name: Setup Homebrew
-        uses: Homebrew/actions/setup-homebrew@a84a03efc108f7d05469800fd48890c1cd34a6ad # master
+        uses: Homebrew/actions/setup-homebrew@d0dd492210067c1b5f8857ab6c5dd52c29944e44 # master
 
       - name: Setup Workflow Tools
         run: brew install go-task
