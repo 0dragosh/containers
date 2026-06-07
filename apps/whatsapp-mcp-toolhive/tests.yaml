@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/GoogleContainerTools/container-structure-test/master/schema.json
+schemaVersion: "2.0.0"
+fileExistenceTests:
+  - name: WhatsApp bridge binary
+    path: /opt/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 1000
+    gid: 1000
+  - name: Read-only MCP entrypoint
+    path: /opt/whatsapp-mcp/readonly_main.py
+    shouldExist: true
+    permissions: "-rw-r--r--"
+    uid: 1000
+    gid: 1000
+  - name: Container entrypoint
+    path: /opt/whatsapp-mcp/entrypoint.sh
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 1000
+    gid: 1000
+  - name: Config directory
+    path: /config
+    shouldExist: true
+    permissions: "drwxr-xr-x"
+    uid: 1000
+    gid: 1000
+commandTests:
+  - name: Bridge help
+    command: /opt/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge
+    args: ["--help"]
+    exitCode: 0
+  - name: Python dependencies import
+    command: python
+    args:
+      - -c
+      - import mcp, httpx, requests, sqlite3
+    exitCode: 0
+  - name: Read-only wrapper omits send tools
+    command: python
+    args:
+      - -c
+      - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/readonly_main.py').read_text(); assert 'def send_message' not in s; assert 'def send_file' not in s; assert 'def send_audio_message' not in s; assert 'def download_media' in s"
+    exitCode: 0
