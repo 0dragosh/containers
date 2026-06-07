@@ -27,24 +27,16 @@ export FORWARD_SELF="${FORWARD_SELF:-false}"
 cd "${BRIDGE_DIR}"
 "${BRIDGE_DIR}/whatsapp-bridge" "$@" >&2 &
 bridge_pid=$!
-mcp_pid=""
 
 terminate() {
-    if [[ -n "${mcp_pid}" ]]; then
-        kill -TERM "${mcp_pid}" 2>/dev/null || true
-    fi
     kill -TERM "${bridge_pid}" 2>/dev/null || true
-    wait "${mcp_pid}" 2>/dev/null || true
     wait "${bridge_pid}" 2>/dev/null || true
 }
 
 trap terminate INT TERM
 
 cd "${MCP_DIR}"
-python /opt/whatsapp-mcp/readonly_main.py &
-mcp_pid=$!
-
-wait -n "${bridge_pid}" "${mcp_pid}"
+python /opt/whatsapp-mcp/readonly_main.py
 status=$?
 terminate
 exit "${status}"
