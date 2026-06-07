@@ -12,7 +12,7 @@ RUN apt-get update \
 WORKDIR /src/whatsapp-bridge
 RUN CGO_ENABLED=1 go build -trimpath -ldflags="-s -w" -o /out/whatsapp-bridge .
 
-FROM docker.io/library/python:3.12-slim-bookworm
+FROM docker.io/library/python:3.14-slim-bookworm
 ARG VERSION
 
 RUN apt-get update \
