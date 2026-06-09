@@ -43,6 +43,23 @@
   packageRules: [
     {
       description: [
+        'Auto-merge WhatsApp MCP whatsmeow bridge dependency updates',
+      ],
+      matchFileNames: [
+        'apps/whatsapp-mcp-toolhive/docker-bake.hcl',
+      ],
+      matchDatasources: [
+        'go',
+      ],
+      matchPackageNames: [
+        'go.mau.fi/whatsmeow',
+      ],
+      automerge: true,
+      automergeType: 'pr',
+      ignoreTests: false,
+    },
+    {
+      description: [
         'Auto-merge Application Updates',
       ],
       matchFileNames: [
