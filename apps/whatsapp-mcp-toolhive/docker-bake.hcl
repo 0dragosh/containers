@@ -5,6 +5,11 @@ variable "VERSION" {
   default = "0.3.0"
 }
 
+variable "WHATSMEOW_VERSION" {
+  // renovate: datasource=go depName=go.mau.fi/whatsmeow
+  default = "v0.0.0-20260604205742-c6a4b703e48f"
+}
+
 group "default" {
   targets = ["image-local"]
 }
@@ -16,7 +21,8 @@ variable "SOURCE" {
 target "image" {
   inherits = ["docker-metadata-action"]
   args = {
-    VERSION = "${VERSION}"
+    VERSION            = "${VERSION}"
+    WHATSMEOW_VERSION = "${WHATSMEOW_VERSION}"
   }
   labels = {
     "org.opencontainers.image.source" = "${SOURCE}"

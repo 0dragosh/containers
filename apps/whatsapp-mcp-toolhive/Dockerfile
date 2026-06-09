@@ -1,16 +1,20 @@
 # syntax=docker/dockerfile:1
 
 ARG VERSION
+ARG WHATSMEOW_VERSION
 
 FROM docker.io/library/golang:1.26-bookworm AS builder
 ARG VERSION
+ARG WHATSMEOW_VERSION
 WORKDIR /src
 RUN apt-get update \
     && apt-get install --no-install-recommends -y ca-certificates gcc git libc6-dev \
     && rm -rf /var/lib/apt/lists/* \
     && git clone --depth 1 --branch "v${VERSION}" https://github.com/verygoodplugins/whatsapp-mcp.git .
 WORKDIR /src/whatsapp-bridge
-RUN CGO_ENABLED=1 go build -trimpath -ldflags="-s -w" -o /out/whatsapp-bridge .
+RUN go get "go.mau.fi/whatsmeow@${WHATSMEOW_VERSION}" \
+    && go mod tidy \
+    && CGO_ENABLED=1 go build -trimpath -ldflags="-s -w" -o /out/whatsapp-bridge .
 
 FROM docker.io/library/python:3.14-slim-bookworm
 ARG VERSION
