@@ -2,7 +2,7 @@
 
 ARG VERSION
 
-FROM docker.io/library/golang:1.24-bookworm AS builder
+FROM docker.io/library/golang:1.26-bookworm AS builder
 ARG VERSION
 WORKDIR /src
 RUN apt-get update \
