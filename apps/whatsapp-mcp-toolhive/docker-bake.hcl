@@ -7,7 +7,7 @@ variable "VERSION" {
 
 variable "WHATSMEOW_VERSION" {
   // renovate: datasource=go depName=go.mau.fi/whatsmeow
-  default = "v0.0.0-20260604205742-c6a4b703e48f"
+  default = "v0.0.0-20260609091626-4e622162b959"
 }
 
 group "default" {
