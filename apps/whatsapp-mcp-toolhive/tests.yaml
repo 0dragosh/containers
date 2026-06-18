@@ -1,6 +1,9 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/GoogleContainerTools/container-structure-test/master/schema.json
 schemaVersion: "2.0.0"
+metadataTest:
+  entrypoint:
+    - /opt/whatsapp-mcp/mcp-entrypoint.sh
 fileExistenceTests:
   - name: WhatsApp bridge binary
     path: /opt/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge
@@ -14,8 +17,26 @@ fileExistenceTests:
     permissions: "-rw-r--r--"
     uid: 1000
     gid: 1000
-  - name: Container entrypoint
+  - name: Shared entrypoint environment
+    path: /opt/whatsapp-mcp/common-env.sh
+    shouldExist: true
+    permissions: "-rw-r--r--"
+    uid: 1000
+    gid: 1000
+  - name: Combined compatibility entrypoint
     path: /opt/whatsapp-mcp/entrypoint.sh
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 1000
+    gid: 1000
+  - name: Bridge entrypoint
+    path: /opt/whatsapp-mcp/bridge-entrypoint.sh
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 1000
+    gid: 1000
+  - name: MCP entrypoint
+    path: /opt/whatsapp-mcp/mcp-entrypoint.sh
     shouldExist: true
     permissions: "-rwxr-xr-x"
     uid: 1000
@@ -43,9 +64,21 @@ commandTests:
       - -c
       - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/readonly_main.py').read_text(); assert 'def send_message' not in s; assert 'def send_file' not in s; assert 'def send_audio_message' not in s; assert 'def download_media' in s"
     exitCode: 0
-  - name: MCP server owns foreground stdio
+  - name: Combined compatibility entrypoint delegates split processes
     command: python
     args:
       - -c
-      - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/entrypoint.sh').read_text(); assert 'python /opt/whatsapp-mcp/readonly_main.py &' not in s; assert 'python /opt/whatsapp-mcp/readonly_main.py' in s; assert 'status=' in s"
+      - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/entrypoint.sh').read_text(); assert '/opt/whatsapp-mcp/bridge-entrypoint.sh' in s; assert '/opt/whatsapp-mcp/mcp-entrypoint.sh' in s; assert 'whatsapp-bridge\" \"$@\" >&2 &' not in s"
+    exitCode: 0
+  - name: MCP entrypoint owns foreground stdio
+    command: python
+    args:
+      - -c
+      - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/mcp-entrypoint.sh').read_text(); assert 'python /opt/whatsapp-mcp/readonly_main.py' in s; assert 'exec python' in s; assert 'whatsapp-bridge' not in s"
+    exitCode: 0
+  - name: Bridge entrypoint owns foreground bridge
+    command: python
+    args:
+      - -c
+      - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/bridge-entrypoint.sh').read_text(); assert 'exec \"${BRIDGE_DIR}/whatsapp-bridge\" \"$@\"' in s; assert 'readonly_main.py' not in s"
     exitCode: 0

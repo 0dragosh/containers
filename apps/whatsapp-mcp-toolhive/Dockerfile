@@ -1,16 +1,18 @@
 # syntax=docker/dockerfile:1
 
 ARG VERSION
+ARG UPSTREAM_VERSION
 ARG WHATSMEOW_VERSION
 
 FROM docker.io/library/golang:1.26-bookworm AS builder
 ARG VERSION
+ARG UPSTREAM_VERSION
 ARG WHATSMEOW_VERSION
 WORKDIR /src
 RUN apt-get update \
     && apt-get install --no-install-recommends -y ca-certificates gcc git libc6-dev \
     && rm -rf /var/lib/apt/lists/* \
-    && git clone --depth 1 --branch "v${VERSION}" https://github.com/verygoodplugins/whatsapp-mcp.git .
+    && git clone --depth 1 --branch "v${UPSTREAM_VERSION}" https://github.com/verygoodplugins/whatsapp-mcp.git .
 WORKDIR /src/whatsapp-bridge
 RUN go get "go.mau.fi/whatsmeow@${WHATSMEOW_VERSION}" \
     && go mod tidy \
@@ -28,7 +30,10 @@ RUN apt-get update \
 
 COPY --from=builder --chown=1000:1000 --chmod=755 /out/whatsapp-bridge /opt/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge
 COPY --from=builder --chown=1000:1000 /src/whatsapp-mcp-server /opt/whatsapp-mcp/whatsapp-mcp-server
+COPY --chown=1000:1000 --chmod=644 common-env.sh /opt/whatsapp-mcp/common-env.sh
 COPY --chown=1000:1000 --chmod=755 entrypoint.sh /opt/whatsapp-mcp/entrypoint.sh
+COPY --chown=1000:1000 --chmod=755 bridge-entrypoint.sh /opt/whatsapp-mcp/bridge-entrypoint.sh
+COPY --chown=1000:1000 --chmod=755 mcp-entrypoint.sh /opt/whatsapp-mcp/mcp-entrypoint.sh
 COPY --chown=1000:1000 --chmod=644 readonly_main.py /opt/whatsapp-mcp/readonly_main.py
 
 RUN python -m pip install --no-cache-dir /opt/whatsapp-mcp/whatsapp-mcp-server \
@@ -45,4 +50,4 @@ ENV PYTHONUNBUFFERED=1 \
 
 USER 1000:1000
 WORKDIR /opt/whatsapp-mcp/whatsapp-mcp-server
-ENTRYPOINT ["/opt/whatsapp-mcp/entrypoint.sh"]
+ENTRYPOINT ["/opt/whatsapp-mcp/mcp-entrypoint.sh"]

@@ -1,6 +1,10 @@
 target "docker-metadata-action" {}
 
 variable "VERSION" {
+  default = "0.4.0"
+}
+
+variable "UPSTREAM_VERSION" {
   // renovate: datasource=github-releases depName=verygoodplugins/whatsapp-mcp versioning=semver
   default = "0.3.0"
 }
@@ -22,6 +26,7 @@ target "image" {
   inherits = ["docker-metadata-action"]
   args = {
     VERSION            = "${VERSION}"
+    UPSTREAM_VERSION   = "${UPSTREAM_VERSION}"
     WHATSMEOW_VERSION = "${WHATSMEOW_VERSION}"
   }
   labels = {
