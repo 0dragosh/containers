@@ -1,7 +1,7 @@
 target "docker-metadata-action" {}
 
 variable "VERSION" {
-  default = "split-proc-20260618-0958"
+  default = "0.4.0"
 }
 
 variable "UPSTREAM_VERSION" {

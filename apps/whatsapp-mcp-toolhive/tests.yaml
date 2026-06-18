@@ -1,6 +1,9 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/GoogleContainerTools/container-structure-test/master/schema.json
 schemaVersion: "2.0.0"
+metadataTest:
+  entrypoint:
+    - /opt/whatsapp-mcp/mcp-entrypoint.sh
 fileExistenceTests:
   - name: WhatsApp bridge binary
     path: /opt/whatsapp-mcp/whatsapp-bridge/whatsapp-bridge
@@ -20,7 +23,7 @@ fileExistenceTests:
     permissions: "-rw-r--r--"
     uid: 1000
     gid: 1000
-  - name: Container entrypoint
+  - name: Combined compatibility entrypoint
     path: /opt/whatsapp-mcp/entrypoint.sh
     shouldExist: true
     permissions: "-rwxr-xr-x"
@@ -61,7 +64,7 @@ commandTests:
       - -c
       - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/readonly_main.py').read_text(); assert 'def send_message' not in s; assert 'def send_file' not in s; assert 'def send_audio_message' not in s; assert 'def download_media' in s"
     exitCode: 0
-  - name: Legacy entrypoint delegates split processes
+  - name: Combined compatibility entrypoint delegates split processes
     command: python
     args:
       - -c

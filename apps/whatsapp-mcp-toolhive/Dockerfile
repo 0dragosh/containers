@@ -50,4 +50,4 @@ ENV PYTHONUNBUFFERED=1 \
 
 USER 1000:1000
 WORKDIR /opt/whatsapp-mcp/whatsapp-mcp-server
-ENTRYPOINT ["/opt/whatsapp-mcp/entrypoint.sh"]
+ENTRYPOINT ["/opt/whatsapp-mcp/mcp-entrypoint.sh"]
