@@ -3,7 +3,7 @@
 ARG VERSION=1.6.5
 ARG SOURCE=https://github.com/aplaceforallmystuff/mcp-arr
 ARG SOURCE_REV=768120d945cc6b56ad651e018ba61943f80631cc
-ARG NODE_IMAGE=docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+ARG NODE_IMAGE=docker.io/library/node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
 
 FROM ${NODE_IMAGE} AS builder
 ARG VERSION
