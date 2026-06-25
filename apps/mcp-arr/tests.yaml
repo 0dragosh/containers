@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/GoogleContainerTools/container-structure-test/master/schema.json
+schemaVersion: "2.0.0"
+metadataTest:
+  entrypoint:
+    - node
+    - dist/index.js
+  user: "1000:1000"
+fileExistenceTests:
+  - name: Built MCP server entrypoint
+    path: /home/node/dist/index.js
+    shouldExist: true
+    permissions: "-rw-r--r--"
+    uid: 1000
+    gid: 1000
+  - name: Package metadata
+    path: /home/node/package.json
+    shouldExist: true
+    permissions: "-rw-r--r--"
+    uid: 1000
+    gid: 1000
+  - name: Production dependencies
+    path: /home/node/node_modules
+    shouldExist: true
+    permissions: "drwxr-xr-x"
+    uid: 1000
+    gid: 1000
+commandTests:
+  - name: Node is available
+    command: node
+    args: ["--version"]
+    exitCode: 0
+  - name: Package metadata is readable
+    command: node
+    args:
+      - -e
+      - "const pkg=require('/home/node/package.json'); if (pkg.name !== 'mcp-arr-server' || pkg.main !== 'dist/index.js') process.exit(1)"
+    exitCode: 0
