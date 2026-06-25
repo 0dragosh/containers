@@ -21,7 +21,8 @@ WORKDIR /home/node
 COPY --from=builder --chown=1000:1000 /src/package.json /src/package-lock.json ./
 USER 1000:1000
 RUN npm ci --omit=dev \
-    && npm cache clean --force
+    && npm cache clean --force \
+    && chmod 755 node_modules
 COPY --from=builder --chown=1000:1000 /src/dist ./dist
 
 ENTRYPOINT ["node", "dist/index.js"]
