@@ -6,7 +6,7 @@ variable "VERSION" {
 
 variable "UPSTREAM_VERSION" {
   // renovate: datasource=github-releases depName=verygoodplugins/whatsapp-mcp versioning=semver
-  default = "0.3.0"
+  default = "0.4.0"
 }
 
 variable "WHATSMEOW_VERSION" {
