@@ -57,6 +57,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-valid-semver }}
             type=semver,pattern={{major}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-valid-semver }}
             type=raw,value=${{ steps.app-versions.outputs.raw }}
+            type=raw,value=${{ steps.app-versions.outputs.upstream }},enable=${{ startsWith(steps.app-versions.outputs.upstream, 'v') }}
             type=raw,value=rolling,enable=${{ steps.app-versions.outputs.is-valid-semver }}
 
       - name: Upload Bake Metadata
