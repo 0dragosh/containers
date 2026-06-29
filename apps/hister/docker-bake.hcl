@@ -1,7 +1,12 @@
 target "docker-metadata-action" {}
 
 variable "VERSION" {
-  default = "latest"
+  // renovate: datasource=github-releases depName=asciimoo/hister versioning=semver
+  default = "v0.15.0"
+}
+
+variable "HISTER_IMAGE_DIGEST" {
+  default = "sha256:e7b88f7e72171a29b6ec6d8579f2fe9ff74eb352b8b93d331f7aa68b02bdcbf1"
 }
 
 group "default" {
@@ -14,6 +19,9 @@ variable "SOURCE" {
 
 target "image" {
   inherits = ["docker-metadata-action"]
+  args = {
+    HISTER_IMAGE = "ghcr.io/asciimoo/hister:${VERSION}@${HISTER_IMAGE_DIGEST}"
+  }
   labels = {
     "org.opencontainers.image.source" = "${SOURCE}"
   }
