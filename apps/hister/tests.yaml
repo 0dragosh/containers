@@ -12,14 +12,10 @@ fileExistenceTests:
   - name: yt-dlp binary
     path: /usr/local/bin/yt-dlp
     shouldExist: true
-    permissions: "Lrwxrwxrwx"
-  - name: yt-dlp packaged executable
-    path: /usr/bin/yt-dlp
-    shouldExist: true
     permissions: "-rwxr-xr-x"
 commandTests:
   - name: yt-dlp is available
     command: /usr/local/bin/yt-dlp
     args: ["--version"]
-    expectedOutput: ["2025.03.31"]
+    expectedOutput: ["2026.06.09"]
     exitCode: 0
