@@ -7,5 +7,8 @@ FROM ${HISTER_IMAGE}
 ARG YT_DLP_VERSION
 USER root
 RUN apk add --no-cache ca-certificates py3-pip python3 \
-    && python3 -m pip install --no-cache-dir --break-system-packages --prefix=/usr/local "yt-dlp==${YT_DLP_VERSION}"
+    && python3 -m pip install --no-cache-dir --break-system-packages "yt-dlp==${YT_DLP_VERSION}" \
+    && YT_DLP_BIN="$(command -v yt-dlp)" \
+    && if [ "${YT_DLP_BIN}" != "/usr/local/bin/yt-dlp" ]; then cp "${YT_DLP_BIN}" /usr/local/bin/yt-dlp; fi \
+    && /usr/local/bin/yt-dlp --version
 USER 65532:65532
