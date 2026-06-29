@@ -1,0 +1,25 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/GoogleContainerTools/container-structure-test/master/schema.json
+schemaVersion: "2.0.0"
+metadataTest:
+  entrypoint:
+    - /hister/hister
+  cmd:
+    - listen
+  workdir: /hister
+  user: "65532:65532"
+fileExistenceTests:
+  - name: yt-dlp binary
+    path: /usr/local/bin/yt-dlp
+    shouldExist: true
+    permissions: "Lrwxrwxrwx"
+  - name: yt-dlp packaged executable
+    path: /usr/bin/yt-dlp
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+commandTests:
+  - name: yt-dlp is available
+    command: /usr/local/bin/yt-dlp
+    args: ["--version"]
+    expectedOutput: ["2025.03.31"]
+    exitCode: 0
