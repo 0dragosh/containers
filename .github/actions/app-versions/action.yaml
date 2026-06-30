@@ -12,6 +12,9 @@ outputs:
   is-valid-semver:
     description: If version is valid semantic versioning
     value: ${{ steps.versions.outputs.is-valid-semver }}
+  is-stable-semver:
+    description: If version is stable semantic versioning
+    value: ${{ steps.versions.outputs.is-stable-semver }}
   semantic:
     description: Semantic Version
     value: ${{ steps.versions.outputs.semantic }}
@@ -35,32 +38,6 @@ runs:
       run: npm install semver
 
     - name: Application Versions
-      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       id: versions
-      with:
-        script: |
-          const semver = require('semver');
-
-          // Strip the v prefix and pre-release info
-          function sanitize(version) {
-              return version.replace(/^v/, '').split('-')[0];
-          }
-
-          function calver() {
-              const now = new Date();
-              return `${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()}`;
-          }
-
-          const upstreamVersion = '${{ inputs.upstream-version }}';
-          const strictSemverRegex = /^v?(\d+(\.\d+)?(\.\d+)?)/;
-
-          const parsedVersion = strictSemverRegex.exec(upstreamVersion);
-          const isValidSemver = parsedVersion !== null;
-          const parsedSemver = isValidSemver ? semver.coerce(parsedVersion[0]) : null;
-          const semanticVersion = isValidSemver ? `${parsedSemver.major}.${parsedSemver.minor}.${parsedSemver.patch}` : calver();
-          const rawVersion = isValidSemver ? sanitize(upstreamVersion) : upstreamVersion;
-
-          core.setOutput('is-valid-semver', isValidSemver);
-          core.setOutput('semantic', semanticVersion);
-          core.setOutput('raw', rawVersion);
-          core.setOutput('upstream', upstreamVersion);
+      shell: bash
+      run: node "${{ github.action_path }}/versions.js" "${{ inputs.upstream-version }}"

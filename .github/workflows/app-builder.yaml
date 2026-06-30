@@ -53,12 +53,12 @@ jobs:
           images: |
             ghcr.io/${{ github.repository_owner }}/${{ inputs.app }}
           tags: |
-            type=semver,pattern={{version}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-valid-semver }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-valid-semver }}
-            type=semver,pattern={{major}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-valid-semver }}
-            type=raw,value=${{ steps.app-versions.outputs.raw }}
+            type=semver,pattern={{version}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-stable-semver }}
+            type=semver,pattern={{major}}.{{minor}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-stable-semver }}
+            type=semver,pattern={{major}},value=${{ steps.app-versions.outputs.semantic }},enable=${{ steps.app-versions.outputs.is-stable-semver }}
             type=raw,value=${{ steps.app-versions.outputs.upstream }},enable=${{ startsWith(steps.app-versions.outputs.upstream, 'v') }}
-            type=raw,value=rolling,enable=${{ steps.app-versions.outputs.is-valid-semver }}
+            type=raw,value=${{ steps.app-versions.outputs.raw }}
+            type=raw,value=rolling,enable=${{ steps.app-versions.outputs.is-stable-semver }}
 
       - name: Upload Bake Metadata
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
