@@ -2,7 +2,7 @@
 
 ARG VERSION=1.4.1
 ARG SOURCE=https://github.com/Microck/discord.py-self-mcp
-ARG PYTHON_IMAGE=docker.io/library/python:3.13-slim-bookworm
+ARG PYTHON_IMAGE=docker.io/library/python:3.14-slim-bookworm
 
 FROM ${PYTHON_IMAGE} AS builder
 ARG VERSION
