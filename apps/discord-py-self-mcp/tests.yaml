@@ -36,3 +36,9 @@ commandTests:
       - -c
       - import discord_py_self_mcp.main
     exitCode: 0
+  - name: OpenCV native dependencies are available
+    command: python
+    args:
+      - -c
+      - import cv2; from hcaptcha_challenger.agent.challenger import AgentV
+    exitCode: 0

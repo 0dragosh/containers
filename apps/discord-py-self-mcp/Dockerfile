@@ -18,7 +18,10 @@ RUN python -m venv /opt/venv \
 
 FROM ${PYTHON_IMAGE}
 
-RUN groupadd --system --gid 1000 discord-py-self-mcp \
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y libgl1 libglib2.0-0 libxcb1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system --gid 1000 discord-py-self-mcp \
     && useradd --system --uid 1000 --gid 1000 --home-dir /tmp discord-py-self-mcp \
     && mkdir -p /opt/discord-py-self-mcp \
     && chown -R 1000:1000 /opt/discord-py-self-mcp
