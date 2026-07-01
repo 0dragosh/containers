@@ -1,0 +1,38 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/GoogleContainerTools/container-structure-test/master/schema.json
+schemaVersion: "2.0.0"
+metadataTest:
+  entrypoint:
+    - discord-py-self-mcp
+  user: "1000:1000"
+  env:
+    - key: HOME
+      value: /tmp
+    - key: PYTHONDONTWRITEBYTECODE
+      value: "1"
+    - key: PYTHONUNBUFFERED
+      value: "1"
+fileExistenceTests:
+  - name: Console script
+    path: /opt/venv/bin/discord-py-self-mcp
+    shouldExist: true
+    permissions: "-rwxr-xr-x"
+    uid: 1000
+    gid: 1000
+  - name: Runtime work directory
+    path: /opt/discord-py-self-mcp
+    shouldExist: true
+    permissions: "drwxr-xr-x"
+    uid: 1000
+    gid: 1000
+commandTests:
+  - name: Python is available
+    command: python
+    args: ["--version"]
+    exitCode: 0
+  - name: MCP package imports
+    command: python
+    args:
+      - -c
+      - import discord_py_self_mcp.main
+    exitCode: 0
