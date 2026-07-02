@@ -11,7 +11,7 @@ variable "UPSTREAM_VERSION" {
 
 variable "WHATSMEOW_VERSION" {
   // renovate: datasource=go depName=go.mau.fi/whatsmeow versioning=semver
-  default = "v0.0.0-20260622185415-5f04eac6dbbb"
+  default = "v0.0.0-20260630180629-b572e5bcb92b"
 }
 
 group "default" {
