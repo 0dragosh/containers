@@ -3,6 +3,9 @@
   extends: [
     'github>home-operations/renovate-config',
   ],
+  ignorePresets: [
+    'github>home-operations/renovate-config:helmPostUpgradeTasks.json5',
+  ],
   customManagers: [
     {
       customType: 'regex',
