@@ -2,7 +2,7 @@ target "docker-metadata-action" {}
 
 variable "VERSION" {
   // renovate: datasource=github-releases depName=asciimoo/hister versioning=semver
-  default = "v0.15.0"
+  default = "v0.16.0"
 }
 
 variable "HISTER_IMAGE_DIGEST" {
