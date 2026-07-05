@@ -11,7 +11,7 @@ variable "HISTER_IMAGE_DIGEST" {
 
 variable "YT_DLP_VERSION" {
   // renovate: datasource=pypi depName=yt-dlp versioning=pep440
-  default = "2026.6.9"
+  default = "2026.7.4"
 }
 
 group "default" {
