@@ -5,6 +5,11 @@ variable "VERSION" {
   default = "1.4.1"
 }
 
+variable "DISCORD_PY_SELF_VERSION" {
+  // renovate: datasource=github-tags depName=dolfies/discord.py-self versioning=semver extractVersion=^v(?<version>.*)$
+  default = "2.1.0"
+}
+
 group "default" {
   targets = ["image-local"]
 }
@@ -16,8 +21,9 @@ variable "SOURCE" {
 target "image" {
   inherits = ["docker-metadata-action"]
   args = {
-    VERSION = "${VERSION}"
-    SOURCE  = "${SOURCE}"
+    VERSION                 = "${VERSION}"
+    DISCORD_PY_SELF_VERSION = "${DISCORD_PY_SELF_VERSION}"
+    SOURCE                  = "${SOURCE}"
   }
   labels = {
     "org.opencontainers.image.source" = "${SOURCE}"

@@ -1,18 +1,21 @@
 # syntax=docker/dockerfile:1
 
 ARG VERSION=1.4.1
+ARG DISCORD_PY_SELF_VERSION=2.1.0
 ARG SOURCE=https://github.com/Microck/discord.py-self-mcp
 ARG PYTHON_IMAGE=docker.io/library/python:3.14-slim-bookworm
 
 FROM ${PYTHON_IMAGE} AS builder
 ARG VERSION
+ARG DISCORD_PY_SELF_VERSION
 ARG SOURCE
 WORKDIR /src
 RUN apt-get update \
     && apt-get install --no-install-recommends -y ca-certificates git \
     && rm -rf /var/lib/apt/lists/* \
     && git clone --depth 1 --branch "v${VERSION}" "${SOURCE}" .
-RUN python -m venv /opt/venv \
+RUN sed -i "s/discord.py-self\\[voice\\]==2.0.1/discord.py-self[voice]==${DISCORD_PY_SELF_VERSION}/g" pyproject.toml requirements.txt \
+    && python -m venv /opt/venv \
     && /opt/venv/bin/python -m pip install --no-cache-dir --upgrade pip setuptools wheel \
     && /opt/venv/bin/python -m pip install --no-cache-dir .
 
