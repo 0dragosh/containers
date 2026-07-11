@@ -17,6 +17,12 @@ fileExistenceTests:
     permissions: "-rw-r--r--"
     uid: 1000
     gid: 1000
+  - name: WhatsApp message search module
+    path: /opt/whatsapp-mcp/message_search.py
+    shouldExist: true
+    permissions: "-rw-r--r--"
+    uid: 1000
+    gid: 1000
   - name: Shared entrypoint environment
     path: /opt/whatsapp-mcp/common-env.sh
     shouldExist: true
@@ -62,7 +68,12 @@ commandTests:
     command: python
     args:
       - -c
-      - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/readonly_main.py').read_text(); assert 'def send_message' not in s; assert 'def send_file' not in s; assert 'def send_audio_message' not in s; assert 'def download_media' in s"
+      - "from pathlib import Path; s=Path('/opt/whatsapp-mcp/readonly_main.py').read_text(); assert 'def send_message' not in s; assert 'def send_file' not in s; assert 'def send_audio_message' not in s; assert 'def download_media' in s; assert 'def search_messages' in s"
+    exitCode: 0
+  - name: Message search unit tests
+    command: python
+    args:
+      - /opt/whatsapp-mcp/test_message_search.py
     exitCode: 0
   - name: Combined compatibility entrypoint delegates split processes
     command: python

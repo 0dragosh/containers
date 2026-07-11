@@ -4,6 +4,7 @@ from typing import Any
 
 from mcp.server.fastmcp import FastMCP
 
+from message_search import search_messages as whatsapp_search_messages
 from whatsapp import download_media as whatsapp_download_media
 from whatsapp import get_chat as whatsapp_get_chat
 from whatsapp import get_contact_chats as whatsapp_get_contact_chats
@@ -15,6 +16,7 @@ from whatsapp import list_chats as whatsapp_list_chats
 from whatsapp import list_messages as whatsapp_list_messages
 from whatsapp import msg_to_dict
 from whatsapp import search_contacts as whatsapp_search_contacts
+from whatsapp import _sender_aliases as whatsapp_sender_aliases
 
 mcp = FastMCP("whatsapp")
 
@@ -37,7 +39,9 @@ def get_contact(
     if identifier is None:
         identifier = phone
     if identifier is None:
-        raise ValueError("Missing required argument: identifier (or phone_number / phone)")
+        raise ValueError(
+            "Missing required argument: identifier (or phone_number / phone)"
+        )
 
     identifier = identifier.strip()
     if not identifier:
@@ -122,6 +126,40 @@ def list_messages(
 
 
 @mcp.tool()
+def search_messages(
+    query: str,
+    chat_jid: str | None = None,
+    sender_phone_number: str | None = None,
+    after: str | None = None,
+    before: str | None = None,
+    ranking: str = "recent_relevance",
+    limit: int = 6,
+    cursor: str | None = None,
+) -> dict[str, Any]:
+    """Search WhatsApp for ad hoc topics, decisions, and current status.
+
+    Returns compact relevance-ranked conversation evidence. Use list_messages
+    instead for chronological ranges and periodic summaries, then use
+    get_message_context when a selected result needs deeper context.
+    """
+    aliases = (
+        whatsapp_sender_aliases(sender_phone_number) if sender_phone_number else None
+    )
+    return whatsapp_search_messages(
+        query=query,
+        chat_jid=chat_jid,
+        sender_phone_number=sender_phone_number,
+        after=after,
+        before=before,
+        ranking=ranking,
+        limit=limit,
+        cursor=cursor,
+        sender_aliases=aliases,
+        sender_name_resolver=whatsapp_get_sender_name,
+    )
+
+
+@mcp.tool()
 def list_chats(
     query: str | None = None,
     limit: int = 50,
@@ -165,7 +203,9 @@ def get_last_interaction(jid: str) -> dict[str, Any]:
 
 
 @mcp.tool()
-def get_message_context(message_id: str, before: int = 5, after: int = 5) -> dict[str, Any]:
+def get_message_context(
+    message_id: str, before: int = 5, after: int = 5
+) -> dict[str, Any]:
     """Get context around a specific WhatsApp message."""
     context = whatsapp_get_message_context(message_id, before, after)
     return {
@@ -180,7 +220,11 @@ def download_media(message_id: str, chat_jid: str) -> dict[str, Any]:
     """Download media from a WhatsApp message and get the local file path."""
     file_path = whatsapp_download_media(message_id, chat_jid)
     if file_path:
-        return {"success": True, "message": "Media downloaded successfully", "file_path": file_path}
+        return {
+            "success": True,
+            "message": "Media downloaded successfully",
+            "file_path": file_path,
+        }
     return {"success": False, "message": "Failed to download media"}
 
 

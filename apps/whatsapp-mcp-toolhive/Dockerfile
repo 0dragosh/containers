@@ -35,6 +35,8 @@ COPY --chown=1000:1000 --chmod=755 entrypoint.sh /opt/whatsapp-mcp/entrypoint.sh
 COPY --chown=1000:1000 --chmod=755 bridge-entrypoint.sh /opt/whatsapp-mcp/bridge-entrypoint.sh
 COPY --chown=1000:1000 --chmod=755 mcp-entrypoint.sh /opt/whatsapp-mcp/mcp-entrypoint.sh
 COPY --chown=1000:1000 --chmod=644 readonly_main.py /opt/whatsapp-mcp/readonly_main.py
+COPY --chown=1000:1000 --chmod=644 message_search.py /opt/whatsapp-mcp/message_search.py
+COPY --chown=1000:1000 --chmod=644 test_message_search.py /opt/whatsapp-mcp/test_message_search.py
 
 RUN python -m pip install --no-cache-dir /opt/whatsapp-mcp/whatsapp-mcp-server \
     && ln -s /config /opt/whatsapp-mcp/whatsapp-bridge/store \
