@@ -162,6 +162,7 @@ class MessageSearchIndex:
         self.sync_interval_seconds = sync_interval_seconds
         self.full_sync_interval_seconds = full_sync_interval_seconds
         self._lock = threading.RLock()
+        self._schema_initialized = False
         self._last_delete_check = 0.0
         self._last_source_check_epoch = 0.0
 
@@ -170,10 +171,19 @@ class MessageSearchIndex:
         uri = f"file:{quote(self.search_db_path, safe='/')}?mode=rwc"
         connection = sqlite3.connect(uri, uri=True, timeout=5)
         connection.row_factory = sqlite3.Row
-        connection.execute("PRAGMA journal_mode=WAL")
-        connection.execute("PRAGMA synchronous=NORMAL")
         connection.execute("PRAGMA busy_timeout=5000")
-        self._initialize_schema(connection)
+        connection.execute("PRAGMA synchronous=NORMAL")
+        try:
+            with self._lock:
+                # WAL changes and schema DDL take database locks, so concurrent
+                # first searches must not run them on separate connections.
+                if not self._schema_initialized:
+                    connection.execute("PRAGMA journal_mode=WAL")
+                    self._initialize_schema(connection)
+                    self._schema_initialized = True
+        except Exception:
+            connection.close()
+            raise
         return connection
 
     def _initialize_schema(self, connection: sqlite3.Connection) -> None:
